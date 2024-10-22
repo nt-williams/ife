@@ -1,4 +1,5 @@
 influence_func_estimand <- S7::new_class("influence_func_estimand",
+  package = "ife",
   properties = list(
     x = S7::class_double,
     eif = S7::class_double,
