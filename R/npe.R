@@ -53,6 +53,15 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
   }
 )
 
+# print
+S7::method(print, influence_func_estimand) <- function(x) {
+  div <- cli::cli_div(theme = list(.val = list(digits = 2)))
+  cli::cli_li("     Estimand: {.val {x@x}}")
+  cli::cli_li("   Std. error: {.val {x@std_error}}")
+  cli::cli_li("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+  cli::cli_end(div)
+}
+
 # x + y
 S7::method(`+`, list(influence_func_estimand, influence_func_estimand)) <- function(e1, e2) {
   check_same(e1, e2)
