@@ -22,6 +22,8 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
   ),
   #' Create a new `influence_func_estimand` object
   #'
+  #' @name ife_constructor
+  #'
   #' @param x [\code{numeric(1)}]\cr
   #'  The estimand.
   #' @param eif [\code{numeric(n)}]\cr
@@ -36,7 +38,7 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
   #'
   #' @examples
   #' x <- influence_func_estimand(5, runif(10))
-  #' y <- influence_func_estimand(5, runif(10))
+  #' y <- ife(5, runif(10))
   #' x + y
   #' x + 1
   #' 1 - y
