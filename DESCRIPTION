@@ -17,3 +17,4 @@ LazyData: true
 Imports: 
     cli,
     S7
+RoxygenNote: 7.3.2

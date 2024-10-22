@@ -20,6 +20,28 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
       }
     )
   ),
+  #' Create a new `influence_func_estimand` object
+  #'
+  #' @param x [\code{numeric(1)}]\cr
+  #'  The estimand.
+  #' @param eif [\code{numeric(n)}]\cr
+  #'  The influence function.
+  #' @param weights [\code{numeric(n)}]\cr
+  #'  Optional sampling weights.
+  #' @param id [\code{character(n)}]\cr
+  #'  Optional cluster identifiers.
+  #'
+  #' @return An 'S7' object of class \code{influence_func_estimand}.
+  #' @export
+  #'
+  #' @examples
+  #' x <- influence_func_estimand(5, runif(10))
+  #' y <- influence_func_estimand(5, runif(10))
+  #' x + y
+  #' x + 1
+  #' 1 - y
+  #' x / y
+  #' x * y
   constructor = function(x, eif, weights = rep(1, length(eif)), id = as.character(1:length(eif))) {
     S7::new_object(S7::S7_object(), x = x, eif = eif, weights = weights, id = id)
   },
