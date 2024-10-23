@@ -1,6 +1,6 @@
 Package: ife
 Type: Package
-Title: Influence Function Based Estimand Objects
+Title: Influence Function Based Estimate Objects
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Nicholas",
