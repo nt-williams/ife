@@ -2,9 +2,9 @@
 #' @export
 generics::tidy
 
-tidy <- S7::new_generic("tidy", "x")
+tidy <- new_generic("tidy", "x")
 
-S7::method(tidy, influence_func_estimate) <- function(x) {
+method(tidy, influence_func_estimate) <- function(x) {
   out <- data.frame(
     estimate = x@x,
     std.error = x@std_error,

@@ -42,4 +42,5 @@ x + 1
 1 - y
 x / y
 x * y
+tidy(x)
 }
