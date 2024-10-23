@@ -3,12 +3,12 @@
 \name{ife}
 \alias{ife}
 \alias{ife_constructor}
-\alias{influence_func_estimand}
-\title{Create a new `influence_func_estimand` object}
+\alias{influence_func_estimate}
+\title{Create a new `influence_func_estimate` object}
 \usage{
 ife(x, eif, weights = rep(1, length(eif)), id = as.character(1:length(eif)))
 
-influence_func_estimand(
+influence_func_estimate(
   x,
   eif,
   weights = rep(1, length(eif)),
@@ -17,7 +17,7 @@ influence_func_estimand(
 }
 \arguments{
 \item{x}{[\code{numeric(1)}]\cr
-The estimand.}
+The estimate.}
 
 \item{eif}{[\code{numeric(n)}]\cr
 The influence function.}
@@ -29,13 +29,13 @@ Optional sampling weights.}
 Optional cluster identifiers.}
 }
 \value{
-An 'S7' object of class \code{influence_func_estimand}.
+An 'S7' object of class \code{influence_func_estimate}.
 }
 \description{
-Create a new `influence_func_estimand` object
+Create a new `influence_func_estimate` object
 }
 \examples{
-x <- influence_func_estimand(5, runif(10))
+x <- influence_func_estimate(5, runif(10))
 y <- ife(5, runif(10))
 x + y
 x + 1

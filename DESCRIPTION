@@ -16,5 +16,6 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     cli,
+    generics,
     S7
 RoxygenNote: 7.3.2

@@ -1,4 +1,4 @@
-influence_func_estimand <- S7::new_class("influence_func_estimand",
+influence_func_estimate <- S7::new_class("influence_func_estimate",
   package = "ife",
   properties = list(
     x = S7::class_double,
@@ -20,12 +20,12 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
       }
     )
   ),
-  #' Create a new `influence_func_estimand` object
+  #' Create a new `influence_func_estimate` object
   #'
   #' @name ife_constructor
   #'
   #' @param x [\code{numeric(1)}]\cr
-  #'  The estimand.
+  #'  The estimate.
   #' @param eif [\code{numeric(n)}]\cr
   #'  The influence function.
   #' @param weights [\code{numeric(n)}]\cr
@@ -33,11 +33,11 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
   #' @param id [\code{character(n)}]\cr
   #'  Optional cluster identifiers.
   #'
-  #' @return An 'S7' object of class \code{influence_func_estimand}.
+  #' @return An 'S7' object of class \code{influence_func_estimate}.
   #' @export
   #'
   #' @examples
-  #' x <- influence_func_estimand(5, runif(10))
+  #' x <- influence_func_estimate(5, runif(10))
   #' y <- ife(5, runif(10))
   #' x + y
   #' x + 1
@@ -79,63 +79,63 @@ influence_func_estimand <- S7::new_class("influence_func_estimand",
 )
 
 # print
-S7::method(print, influence_func_estimand) <- function(x) {
+S7::method(print, influence_func_estimate) <- function(x) {
   div <- cli::cli_div(theme = list(.val = list(digits = 2)))
-  cli::cli_li("     Estimand: {.val {x@x}}")
-  cli::cli_li("   Std. error: {.val {x@std_error}}")
-  cli::cli_li("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+  cli::cli_text(cat("      "), "Estimate: {.val {x@x}}")
+  cli::cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
+  cli::cli_text("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
   cli::cli_end(div)
 }
 
 # x + y
-S7::method(`+`, list(influence_func_estimand, influence_func_estimand)) <- function(e1, e2) {
+S7::method(`+`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimand(e1@x + e2@x, e1@eif + e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x + e2@x, e1@eif + e2@eif, e1@weights, e1@id)
 }
 
-S7::method(`+`, list(influence_func_estimand, S7::class_numeric)) <- function(e1, e2) {
-  influence_func_estimand(e1@x + e2, e1@eif, e1@weights, e1@id)
+S7::method(`+`, list(influence_func_estimate, S7::class_numeric)) <- function(e1, e2) {
+  influence_func_estimate(e1@x + e2, e1@eif, e1@weights, e1@id)
 }
 
-S7::method(`+`, list(S7::class_numeric, influence_func_estimand)) <- function(e1, e2) e2 + e1
+S7::method(`+`, list(S7::class_numeric, influence_func_estimate)) <- function(e1, e2) e2 + e1
 
 # x - y
-S7::method(`-`, list(influence_func_estimand, influence_func_estimand)) <- function(e1, e2) {
+S7::method(`-`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimand(e1@x - e2@x, e1@eif - e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x - e2@x, e1@eif - e2@eif, e1@weights, e1@id)
 }
 
-S7::method(`-`, list(influence_func_estimand, S7::class_numeric)) <- function(e1, e2) {
-  influence_func_estimand(e1@x - e2, e1@eif, e1@weights, e1@id)
+S7::method(`-`, list(influence_func_estimate, S7::class_numeric)) <- function(e1, e2) {
+  influence_func_estimate(e1@x - e2, e1@eif, e1@weights, e1@id)
 }
 
-S7::method(`-`, list(S7::class_numeric, influence_func_estimand)) <- function(e1, e2) {
-  influence_func_estimand(e1 - e2@x, e2@eif, e2@weights, e2@id)
+S7::method(`-`, list(S7::class_numeric, influence_func_estimate)) <- function(e1, e2) {
+  influence_func_estimate(e1 - e2@x, e2@eif, e2@weights, e2@id)
 }
 
 # x / y
-S7::method(`/`, list(influence_func_estimand, influence_func_estimand)) <- function(e1, e2) {
+S7::method(`/`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
   eif <- (e1@eif / e2@x) - ((e2@eif / e2@x^2) * e1@x)
-  influence_func_estimand(e1@x / e2@x, eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x / e2@x, eif, e1@weights, e1@id)
 }
 
-S7::method(`/`, list(S7::class_numeric, influence_func_estimand)) <- function(e1, e2) {
-  influence_func_estimand(e1 / e2@x, -e1 / e2@x^2 * e2@eif, e2@weights, e2@id)
+S7::method(`/`, list(S7::class_numeric, influence_func_estimate)) <- function(e1, e2) {
+  influence_func_estimate(e1 / e2@x, -e1 / e2@x^2 * e2@eif, e2@weights, e2@id)
 }
 
-S7::method(`/`, list(influence_func_estimand, S7::class_numeric)) <- function(e1, e2) {
-  influence_func_estimand(e1@x / e2, 1 / e2 * e1@eif, e1@weights, e1@id)
+S7::method(`/`, list(influence_func_estimate, S7::class_numeric)) <- function(e1, e2) {
+  influence_func_estimate(e1@x / e2, 1 / e2 * e1@eif, e1@weights, e1@id)
 }
 
 # x * y
-S7::method(`*`, list(influence_func_estimand, influence_func_estimand)) <- function(e1, e2) {
+S7::method(`*`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimand(e1@x * e2@x, e2@x * e1@eif + e1@x * e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x * e2@x, e2@x * e1@eif + e1@x * e2@eif, e1@weights, e1@id)
 }
 
-S7::method(`*`, list(S7::class_numeric, influence_func_estimand)) <- function(e1, e2) {
-  influence_func_estimand(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id)
+S7::method(`*`, list(S7::class_numeric, influence_func_estimate)) <- function(e1, e2) {
+  influence_func_estimate(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id)
 }
 
-S7::method(`*`, list(influence_func_estimand, S7::class_numeric)) <- function(e1, e2) e2 * e1
+S7::method(`*`, list(influence_func_estimate, S7::class_numeric)) <- function(e1, e2) e2 * e1
