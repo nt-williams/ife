@@ -2,7 +2,6 @@
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 NULL
 
-
 influence_func_estimate <- new_class("influence_func_estimate",
   package = "ife",
   properties = list(
@@ -55,31 +54,31 @@ influence_func_estimate <- new_class("influence_func_estimate",
   },
   validator = function(self) {
     if (length(self@x) != 1) {
-      "@x must be length 1"
+      return("@x must be length 1")
     }
 
     if (!(length(self@eif > 1))) {
-      "@eif must be greather than length 1"
+      return("@eif must be greather than length 1")
     }
 
     if (length(self@weights) != length(self@eif)) {
-      "@weights must be same length as @eif"
+      return("@weights must be same length as @eif")
     }
 
     if (length(self@id) != length(self@eif)) {
-      "@id must be same length as @eif"
+      return("@id must be same length as @eif")
     }
 
     if (any(is.na(self@eif))) {
-      "@eif must not contain `NA`"
+      return("@eif must not contain `NA`")
     }
 
     if (any(is.na(self@weights))) {
-      "@weights must not contain `NA`"
+      return("@weights must not contain `NA`")
     }
 
     if (any(is.na(self@id))) {
-      "@id must not contain `NA`"
+      return("@id must not contain `NA`")
     }
   }
 )
