@@ -57,7 +57,7 @@ influence_func_estimate <- new_class("influence_func_estimate",
       return("@x must be length 1")
     }
 
-    if (!(length(self@eif > 1))) {
+    if (!(length(self@eif) > 1)) {
       return("@eif must be greather than length 1")
     }
 
