@@ -84,7 +84,7 @@ influence_func_estimate <- new_class("influence_func_estimate",
 )
 
 # print
-method(print, influence_func_estimate) <- function(x) {
+method(print, influence_func_estimate) <- function(x, ...) {
   div <- cli_div(theme = list(.val = list(digits = 2)))
   cli_text(cat("      "), "Estimate: {.val {x@x}}")
   cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
