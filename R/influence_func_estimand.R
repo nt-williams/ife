@@ -1,5 +1,6 @@
 #' @importFrom cli cli_div cli_text cli_end
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
+#' @importFrom stats qnorm
 NULL
 
 influence_func_estimate <- new_class("influence_func_estimate",
@@ -9,6 +10,7 @@ influence_func_estimate <- new_class("influence_func_estimate",
     eif = class_double,
     weights = class_double,
     id = class_character,
+    critical_value = class_double,
     std_error = new_property(
       getter = function(self) {
         n <- length(self@eif)
@@ -20,7 +22,7 @@ influence_func_estimate <- new_class("influence_func_estimate",
     ),
     conf_int = new_property(
       getter = function(self) {
-        self@x + c(-1, 1)*self@std_error*qnorm(0.975)
+        self@x + c(-1, 1)*self@std_error*self@critical_value
       }
     )
   ),
@@ -36,6 +38,8 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #'  Optional sampling weights.
   #' @param id [\code{character(n)}]\cr
   #'  Optional cluster identifiers.
+  #' @param critical_value [\code{numeric(1)}]\cr
+  #'  Optional critical value for constructing confidence interval.
   #'
   #' @return An 'S7' object of class \code{influence_func_estimate}.
   #' @export
@@ -49,8 +53,11 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' x / y
   #' x * y
   #' tidy(x)
-  constructor = function(x, eif, weights = rep(1, length(eif)), id = as.character(1:length(eif))) {
-    new_object(S7_object(), x = x, eif = eif, weights = weights, id = id)
+  constructor = function(x, eif,
+                         weights = rep(1, length(eif)),
+                         id = as.character(1:length(eif)),
+                         critical_value = qnorm(0.975)) {
+    new_object(S7_object(), x = x, eif = eif, weights = weights, id = id, critical_value = critical_value)
   },
   validator = function(self) {
     if (length(self@x) != 1) {
@@ -67,6 +74,10 @@ influence_func_estimate <- new_class("influence_func_estimate",
 
     if (length(self@id) != length(self@eif)) {
       return("@id must be same length as @eif")
+    }
+
+    if (length(self@critical_value) != 1) {
+      return("@critical_value must be length 1")
     }
 
     if (any(is.na(self@eif))) {

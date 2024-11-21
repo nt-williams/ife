@@ -26,6 +26,10 @@ describe("validator", {
   it("id can't contain NA", {
     expect_error(ife(1, c(1, 2, 3), id = c("a", "b", NA)), "@id must not contain `NA`")
   })
+
+  it("critical value must be length 1", {
+    expect_error(ife(1, runif(5), critical_value = c(1, 2)), "@critical_value must be length 1")
+  })
 })
 
 describe("validate contrasts", {

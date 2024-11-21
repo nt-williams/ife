@@ -6,13 +6,20 @@
 \alias{influence_func_estimate}
 \title{Create a new `influence_func_estimate` object}
 \usage{
-ife(x, eif, weights = rep(1, length(eif)), id = as.character(1:length(eif)))
+ife(
+  x,
+  eif,
+  weights = rep(1, length(eif)),
+  id = as.character(1:length(eif)),
+  critical_value = qnorm(0.975)
+)
 
 influence_func_estimate(
   x,
   eif,
   weights = rep(1, length(eif)),
-  id = as.character(1:length(eif))
+  id = as.character(1:length(eif)),
+  critical_value = qnorm(0.975)
 )
 }
 \arguments{
@@ -27,6 +34,9 @@ Optional sampling weights.}
 
 \item{id}{[\code{character(n)}]\cr
 Optional cluster identifiers.}
+
+\item{critical_value}{[\code{numeric(1)}]\cr
+Optional critical value for constructing confidence interval.}
 }
 \value{
 An 'S7' object of class \code{influence_func_estimate}.
