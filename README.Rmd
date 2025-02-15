@@ -52,8 +52,8 @@ Q0 <- predict(m, newdata = foo0, type = "response")
 if1 <- a / pi * (y - Qa) + Q1
 if0 <- (1 - a) / pi * (y - Qa) + Q0
 
-ife1 <- influence_func_estimand(mean(if1), if1)
-ife0 <- influence_func_estimand(mean(if0), if0)
+ife1 <- influence_func_estimate(mean(if1), if1)
+ife0 <- ife(mean(if0), if0)
 
 ife1 - ife0
 ife1 / ife0

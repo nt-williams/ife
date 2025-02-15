@@ -41,15 +41,19 @@ Q0 <- predict(m, newdata = foo0, type = "response")
 if1 <- a / pi * (y - Qa) + Q1
 if0 <- (1 - a) / pi * (y - Qa) + Q0
 
-ife1 <- influence_func_estimand(mean(if1), if1)
-ife0 <- influence_func_estimand(mean(if0), if0)
+ife1 <- influence_func_estimate(mean(if1), if1)
+ife0 <- ife(mean(if0), if0)
 
 ife1 - ife0
-#> • Estimand: 0.17
-#> • Std. error: 0.04
-#> • 95% Conf. int.: 0.08, 0.25
-ife1 / ife0
-#> • Estimand: 1.35
-#> • Std. error: 0.11
-#> • 95% Conf. int.: 1.14, 1.56
 ```
+
+    #> Estimate: 0.15
+
+    #> Std. error: 0.04
+    #> 95% Conf. int.: 0.07, 0.24
+    ife1 / ife0
+
+    #> Estimate: 1.32
+
+    #> Std. error: 0.11
+    #> 95% Conf. int.: 1.11, 1.52
