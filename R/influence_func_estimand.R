@@ -1,5 +1,6 @@
 #' @importFrom cli cli_div cli_text cli_end
 #' @importFrom S7 `@` new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
+#' @rawNamespace if (getRversion() < "4.3.0") importFrom(S7,`@`)
 #' @importFrom stats qnorm
 NULL
 
