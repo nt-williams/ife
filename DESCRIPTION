@@ -9,9 +9,9 @@ Authors@R:
              email = "ntwilliams.personal@gmail.com", 
              comment = c(ORCID = "0000-0002-1378-4831")))
 Maintainer: Nicholas Williams <ntwilliams.personal@gmail.com>
-Description: Implements an S7 class for estimates based on influence functions. 
-  Forward mode automatic differentiation for standard arithmetic operations 
-  are defined for the class.
+Description: Implements an S7 class for estimates based on influence functions, 
+  with forward mode automatic differentiation defined for standard arithmetic 
+  operations.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
