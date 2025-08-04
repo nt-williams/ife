@@ -1,7 +1,7 @@
 Package: ife
 Type: Package
-Title: Influence Function Based Estimate Objects
-Version: 0.1.12
+Title: Autodiff for Influence Function Based Estimates
+Version: 0.1.2
 Authors@R: 
     c(person(given = "Nicholas",
              family = "Williams",
@@ -9,15 +9,16 @@ Authors@R:
              email = "ntwilliams.personal@gmail.com", 
              comment = c(ORCID = "0000-0002-1378-4831")))
 Maintainer: Nicholas Williams <ntwilliams.personal@gmail.com>
-Description: Implements an S7 class for estimates based on influence functions. 
-  Standard arithmetic operations are defined for the class.
+Description: Implements an S7 class for estimates based on influence functions, 
+  with forward mode automatic differentiation defined for standard arithmetic 
+  operations.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
     cli,
     generics,
-    S7
+    S7 (>= 0.2.0)
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
