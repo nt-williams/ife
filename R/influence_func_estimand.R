@@ -1,4 +1,4 @@
-#' @importFrom cli cli_div cli_text cli_end
+#' @importFrom cli cli cli_div format_inline cli_text cli_end
 #' @importFrom S7 `@` new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @rawNamespace if (getRversion() < "4.3.0") importFrom(S7,`@`)
 #' @importFrom stats qnorm
@@ -97,10 +97,14 @@ influence_func_estimate <- new_class("influence_func_estimate",
 
 # print
 method(print, influence_func_estimate) <- function(x, ...) {
-  div <- cli_div(theme = list(.val = list(digits = 2)))
-  cli_text(cat("      "), "Estimate: {.val {x@x}}")
-  cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
-  cli_text("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+  div <- cli_div(theme = list(.val = list(digits = 3)))
+  cli({
+    cat(format_inline("      Estimate: {.val {x@x}}\n"))
+    # cli_text(cat("      "), "Estimate: {.val {x@x}}")
+    cat(format_inline("    Std. error: {.val {x@std_error}}\n"))
+    # cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
+    cli_text("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+  })
   cli_end(div)
 }
 
