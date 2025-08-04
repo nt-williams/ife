@@ -84,4 +84,12 @@ describe("operators", {
       expect_equal(z@std_error, 0.6581774, tolerance = tol)
     })
   })
+
+  describe("log", {
+    it("log(ife / ife)", {
+      z <- log(x / y)
+      log_eif <- (x@eif / x@x) - (y@eif / y@x)
+      expect_equal(z@eif, log_eif)
+    })
+  })
 })

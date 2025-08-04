@@ -156,3 +156,13 @@ method(`*`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
 }
 
 method(`*`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) e2 * e1
+
+# log(x)
+method(log, influence_func_estimate) <- function(x) {
+  influence_func_estimate(log(x@x), x@eif / x@x, x@weights, x@id)
+}
+
+# exp(x)
+method(exp, influence_func_estimate) <- function(x) {
+  influence_func_estimate(exp(x@x), exp(x@x) * x@eif, x@weights, x@id)
+}
