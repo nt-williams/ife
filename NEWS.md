@@ -1,3 +1,7 @@
+# ife 0.1.2
+
+* Adding `log` and `exp` methods
+
 # ife 0.1.12
 
 * Conditional `importFrom` statement to fix bug when R version is less than 4.3.0.
