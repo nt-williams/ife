@@ -18,7 +18,7 @@ LazyData: true
 Imports: 
     cli,
     generics,
-    S7
+    S7 (>= 0.2.0)
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)

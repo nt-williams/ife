@@ -1,6 +1,5 @@
 #' @importFrom cli cli cli_div format_inline cli_text cli_end
-#' @importFrom S7 `@` new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
-#' @rawNamespace if (getRversion() < "4.3.0") importFrom(S7,`@`)
+#' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @importFrom stats qnorm
 NULL
 
@@ -162,7 +161,7 @@ method(`*`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
 method(`*`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) e2 * e1
 
 # log(x)
-method(log, influence_func_estimate) <- function(x) {
+method(log, influence_func_estimate) <- function(x, base) {
   influence_func_estimate(log(x@x), x@eif / x@x, x@weights, x@id)
 }
 
