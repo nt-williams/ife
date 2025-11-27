@@ -1,6 +1,11 @@
-# if 0.1.13
+# ife 0.2.1
 
-* Previous verison incorrectly ignored cluster level ids in standard error calculations (see issue #2)
+* Previous version incorrectly ignored cluster level ids in standard error calculations (see issue #2)
+
+# ife 0.2.0
+
+* Adding `log` and `exp` methods
+* Printing now returns up to 3 digits
 
 # ife 0.1.12
 
