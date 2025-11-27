@@ -1,4 +1,4 @@
-# ife 0.1.2
+# ife 0.2.0
 
 * Adding `log` and `exp` methods
 * Printing now returns up to 3 digits
