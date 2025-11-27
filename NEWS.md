@@ -1,3 +1,7 @@
+# if 0.1.13
+
+* Previous verison incorrectly ignored cluster level ids in standard error calculations (see issue #2)
+
 # ife 0.1.12
 
 * Conditional `importFrom` statement to fix bug when R version is less than 4.3.0.
