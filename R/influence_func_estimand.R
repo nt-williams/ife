@@ -63,7 +63,7 @@ influence_func_estimate <- new_class("influence_func_estimate",
       return("@x must be length 1")
     }
 
-    if (!(length(self@eif) > 1)) {
+    if (length(self@eif) <= 1) {
       return("@eif must be greather than length 1")
     }
 
@@ -79,15 +79,15 @@ influence_func_estimate <- new_class("influence_func_estimate",
       return("@critical_value must be length 1")
     }
 
-    if (any(is.na(self@eif))) {
+    if (anyNA(self@eif)) {
       return("@eif must not contain `NA`")
     }
 
-    if (any(is.na(self@weights))) {
+    if (anyNA(self@weights)) {
       return("@weights must not contain `NA`")
     }
 
-    if (any(is.na(self@id))) {
+    if (anyNA(self@id)) {
       return("@id must not contain `NA`")
     }
   }
