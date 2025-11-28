@@ -1,3 +1,7 @@
+# ife 0.2.1
+
+* Previous version incorrectly ignored cluster level ids in standard error calculations (see issue #2)
+
 # ife 0.2.0
 
 * Adding `log` and `exp` methods
