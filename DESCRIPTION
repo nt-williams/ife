@@ -1,7 +1,7 @@
 Package: ife
 Type: Package
 Title: Autodiff for Influence Function Based Estimates
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Nicholas",
              family = "Williams",
@@ -15,8 +15,11 @@ Description: Implements an S7 class for estimates based on influence functions,
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/nt-williams/ife
+BugReports: https://github.com/nt-williams/ife/issues
 Imports: 
     cli,
+    collapse,
     generics,
     S7 (>= 0.2.0)
 RoxygenNote: 7.3.2

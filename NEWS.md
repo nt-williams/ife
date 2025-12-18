@@ -1,3 +1,7 @@
+# ife 0.2.2
+
+* Speed improvements in the `std_error` "getter" method through `collapse::fmean`. 
+
 # ife 0.2.1
 
 * Previous version incorrectly ignored cluster level ids in standard error calculations (see issue #2)

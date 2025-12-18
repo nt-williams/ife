@@ -1,6 +1,7 @@
 #' @importFrom cli cli cli_div format_inline cli_text cli_end
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @importFrom stats qnorm
+#' @importFrom collapse fmean
 NULL
 
 influence_func_estimate <- new_class("influence_func_estimate",
@@ -13,10 +14,14 @@ influence_func_estimate <- new_class("influence_func_estimate",
     critical_value = class_double,
     std_error = new_property(
       getter = function(self) {
-        n <- length(self@eif)
-        clusters <- split(self@eif*self@weights, self@id)
-        j <- length(clusters)
-        sqrt(var(vapply(clusters, function(x) mean(x), 1)) / j)
+        weighted_eif <- self@eif * self@weights
+        if (length(unique(self@id)) == length(self@eif)) {
+          cluster_means <- weighted_eif
+        } else {
+          cluster_means <- fmean(weighted_eif, self@id)
+        }
+        j <- length(cluster_means)
+        sqrt(var(cluster_means) / j)
       }
     ),
     conf_int = new_property(
@@ -95,13 +100,12 @@ influence_func_estimate <- new_class("influence_func_estimate",
 
 # print
 method(print, influence_func_estimate) <- function(x, ...) {
+  ci <- x@conf_int
   div <- cli_div(theme = list(.val = list(digits = 3)))
   cli({
     cat(format_inline("      Estimate: {.val {x@x}}\n"))
-    # cli_text(cat("      "), "Estimate: {.val {x@x}}")
     cat(format_inline("    Std. error: {.val {x@std_error}}\n"))
-    # cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
-    cli_text("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+    cli_text("95% Conf. int.: {.val {ci[1]}}, {.val {ci[2]}}")
   })
   cli_end(div)
 }
