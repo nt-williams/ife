@@ -143,6 +143,7 @@ method(`+`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
   influence_func_estimate(e1@x + e2, e1@eif, e1@weights, e1@id)
 }
 
+# Delegate to ife + scalar since addition is commutative
 method(`+`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) e2 + e1
 
 # x - y
@@ -156,21 +157,30 @@ method(`-`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
 }
 
 method(`-`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
-  influence_func_estimate(e1 - e2@x, e2@eif, e2@weights, e2@id)
+  influence_func_estimate(e1 - e2@x, -e2@eif, e2@weights, e2@id)
 }
 
 # x / y
 method(`/`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
+  if (abs(e2@x) < .Machine$double.eps) {
+    stop("Division by zero: denominator estimate is zero", call. = FALSE)
+  }
   eif <- (e1@eif / e2@x) - ((e2@eif / e2@x^2) * e1@x)
   influence_func_estimate(e1@x / e2@x, eif, e1@weights, e1@id)
 }
 
 method(`/`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
+  if (abs(e2@x) < .Machine$double.eps) {
+    stop("Division by zero: denominator estimate is zero", call. = FALSE)
+  }
   influence_func_estimate(e1 / e2@x, -e1 / e2@x^2 * e2@eif, e2@weights, e2@id)
 }
 
 method(`/`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
+  if (abs(e2) < .Machine$double.eps) {
+    stop("Division by zero: denominator is zero", call. = FALSE)
+  }
   influence_func_estimate(e1@x / e2, 1 / e2 * e1@eif, e1@weights, e1@id)
 }
 
@@ -184,10 +194,14 @@ method(`*`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
   influence_func_estimate(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id)
 }
 
+# Delegate to scalar * ife since multiplication is commutative
 method(`*`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) e2 * e1
 
 # log(x)
 method(log, influence_func_estimate) <- function(x, base) {
+  if (x@x <= 0) {
+    stop("log() requires positive values: estimate is ", x@x, call. = FALSE)
+  }
   influence_func_estimate(log(x@x), x@eif / x@x, x@weights, x@id)
 }
 
