@@ -1,27 +1,37 @@
 #' @importFrom cli cli cli_div format_inline cli_text cli_end
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @importFrom stats qnorm
-#' @importFrom collapse fmean
 NULL
 
 influence_func_estimate <- new_class("influence_func_estimate",
   package = "ife",
   properties = list(
-    x = class_double,
-    eif = class_double,
-    weights = class_double,
-    id = class_character,
+    x = new_property(
+      class_double,
+      setter = make_immutable("x")
+    ),
+    eif = new_property(
+      class_double,
+      setter = make_immutable("eif")
+    ),
+    weights = new_property(
+      class_double,
+      setter = make_immutable("weights")
+    ),
+    id = new_property(
+      class_character,
+      setter = make_immutable("id")
+    ),
     critical_value = class_double,
     std_error = new_property(
-      getter = function(self) {
-        weighted_eif <- self@eif * self@weights
-        if (length(unique(self@id)) == length(self@eif)) {
-          cluster_means <- weighted_eif
-        } else {
-          cluster_means <- fmean(weighted_eif, self@id)
+      class_double,
+      default = NA_real_,
+      setter = function(self, value) {
+        if (!is.null(self@std_error) && !is.na(self@std_error)) {
+          stop("@std_error is read-only", call. = FALSE)
         }
-        j <- length(cluster_means)
-        sqrt(var(cluster_means) / j)
+        self@std_error <- value
+        self
       }
     ),
     conf_int = new_property(
@@ -61,7 +71,20 @@ influence_func_estimate <- new_class("influence_func_estimate",
                          weights = rep(1, length(eif)),
                          id = as.character(1:length(eif)),
                          critical_value = qnorm(0.975)) {
-    new_object(S7_object(), x = x, eif = eif, weights = weights, id = id, critical_value = critical_value)
+    self <- new_object(
+      S7_object(),
+      x = x,
+      eif = eif,
+      weights = weights,
+      id = id,
+      critical_value = critical_value,
+      std_error = NA_real_
+    )
+
+    S7::validate(self)
+
+    self@std_error <- std_error(self)
+    self
   },
   validator = function(self) {
     if (length(self@x) != 1) {

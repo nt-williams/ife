@@ -13,3 +13,13 @@ check_same <- function(e1, e2) {
 
   invisible()
 }
+
+make_immutable <- function(property) {
+  function(self, value) {
+    if (!is.null(S7::prop(self, property))) {
+      stop(paste0("@", property, " is read-only"), call. = FALSE)
+    }
+    S7::prop(self, property) <- value
+    self
+  }
+}

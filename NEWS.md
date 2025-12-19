@@ -1,6 +1,8 @@
 # ife 0.2.2
 
-* Speed improvements in the `std_error` "getter" method through `collapse::fmean`. 
+* Speed improvements through `collapse::fmean` and `collapse::fvar`.
+* `std_error` is only calculated once.
+* All properties, excluding `conf_int`, are now immutable.
 
 # ife 0.2.1
 
