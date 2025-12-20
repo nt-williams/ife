@@ -31,6 +31,7 @@ inverse probability weighting (AIPW).
 ``` r
 library(ife)
 
+set.seed(7654)
 # Generate simulated data
 n <- 500
 w <- runif(n)                                   # confounder
@@ -69,18 +70,18 @@ variance estimated using automatic differentiation. The additive effect
 
 ``` r
 ife1 - ife0
-#>       Estimate: 0.254
+#>       Estimate: 0.257
 #>     Std. error: 0.042
-#> 95% Conf. int.: 0.172, 0.336
+#> 95% Conf. int.: 0.174, 0.339
 ```
 
 The multiplicative effect (risk ratio) can be estimated as:
 
 ``` r
 ife1 / ife0
-#>       Estimate: 1.583
-#>     Std. error: 0.129
-#> 95% Conf. int.: 1.33, 1.837
+#>       Estimate: 1.547
+#>     Std. error: 0.12
+#> 95% Conf. int.: 1.312, 1.783
 ```
 
 For the risk ratio, which is strictly positive, you can estimate the
@@ -89,5 +90,5 @@ ensure the lower bound is always positive:
 
 ``` r
 exp(log(ife1 / ife0)@conf_int)
-#> [1] 1.35 1.86
+#> [1] 1.33 1.80
 ```
