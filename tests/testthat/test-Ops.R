@@ -92,4 +92,12 @@ describe("operators", {
       expect_equal(z@eif, log_eif)
     })
   })
+
+  describe("powers", {
+    it("ife^scalar", {
+      z <- y^2
+      eif <- 2 * (y@x) * y@eif
+      expect_equal(z@eif, eif)
+    })
+  })
 })

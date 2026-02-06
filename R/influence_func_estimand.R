@@ -194,6 +194,11 @@ method(`*`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
   influence_func_estimate(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id)
 }
 
+# x^n
+method(`^`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
+  influence_func_estimate(e1@x^e2, e2 * e1@x^(e2 - 1) * e1@eif, e1@weights, e1@id)
+}
+
 # Delegate to scalar * ife since multiplication is commutative
 method(`*`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) e2 * e1
 
