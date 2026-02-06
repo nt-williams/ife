@@ -1,3 +1,7 @@
+# ife 0.2.3
+
+* Adding `^` method for raising estimates to a power via the delta method.
+
 # ife 0.2.2
 
 * Speed improvements through `collapse::fmean` and `collapse::fvar`.
