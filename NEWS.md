@@ -1,3 +1,7 @@
+# ife 0.2.4
+
+* Propagate `critical_value` through arithmetic operations. Binary operations between two estimates use the maximum critical value.
+
 # ife 0.2.3
 
 * Adding `^` method for raising estimates to a power via the delta method.
