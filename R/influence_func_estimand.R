@@ -1,6 +1,7 @@
 #' @importFrom cli cli cli_div format_inline cli_text cli_end
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @importFrom stats qnorm
+#' @importFrom collapse fvar fsum
 NULL
 
 influence_func_estimate <- new_class("influence_func_estimate",
@@ -45,9 +46,9 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' @name ife_constructor
   #'
   #' @param x [\code{numeric(1)}]\cr
-  #'  The point estimate.
+  #'  The individual-level point estimate.
   #' @param eif [\code{numeric(n)}]\cr
-  #'  The influence function.
+  #'  The individual-level influence function.
   #' @param weights [\code{numeric(n)}]\cr
   #'  Optional known survey sampling weights.
   #' @param id [\code{character(n)}]\cr
@@ -56,6 +57,14 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #'  Optional critical value for constructing confidence interval.
   #'
   #' @return An 'S7' object of class \code{influence_func_estimate}.
+  #' 
+  #' @details
+  #' If known survey weights are provided, the variance estimator is the sample variance of the influence function
+  #' multiplied by the survey weights (see DOI: 10.1093/aje/kwu197 for more information). If there is clustering, 
+  #' \code{x} and \code{eif} are assumed to be on the individual-level. The individual-level influence function is 
+  #' then aggregated to the cluster-level and the variance estimator is the sample variance of the estimated 
+  #' cluster-level influence function, scaled by the number of clusters (see DOI: 10.1002/sim.9813 for more information).
+  #' 
   #' @export
   #'
   #' @examples

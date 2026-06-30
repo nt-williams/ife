@@ -24,10 +24,10 @@ influence_func_estimate(
 }
 \arguments{
 \item{x}{[\code{numeric(1)}]\cr
-The point estimate.}
+The individual-level point estimate.}
 
 \item{eif}{[\code{numeric(n)}]\cr
-The influence function.}
+The individual-level influence function.}
 
 \item{weights}{[\code{numeric(n)}]\cr
 Optional known survey sampling weights.}
@@ -43,6 +43,13 @@ An 'S7' object of class \code{influence_func_estimate}.
 }
 \description{
 Create a new `influence_func_estimate` object
+}
+\details{
+If known survey weights are provided, the variance estimator is the sample variance of the influence function
+multiplied by the survey weights (see DOI: 10.1093/aje/kwu197 for more information). If there is clustering, 
+\code{x} and \code{eif} are assumed to be on the individual-level. The individual-level influence function is 
+then aggregated to the cluster-level and the variance estimator is sample variance of the estimated 
+cluster-level influence function, scaled by the number of clusters (see DOI: 10.1002/sim.9813 for more information).
 }
 \examples{
 .x <- rnorm(100)
