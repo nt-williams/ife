@@ -48,7 +48,7 @@ Create a new `influence_func_estimate` object
 If known survey weights are provided, the variance estimator is the sample variance of the influence function
 multiplied by the survey weights (see DOI: 10.1093/aje/kwu197 for more information). If there is clustering, 
 \code{x} and \code{eif} are assumed to be on the individual-level. The individual-level influence function is 
-then aggregated to the cluster-level and the variance estimator is sample variance of the estimated 
+then aggregated to the cluster-level and the variance estimator is the sample variance of the estimated 
 cluster-level influence function, scaled by the number of clusters (see DOI: 10.1002/sim.9813 for more information).
 }
 \examples{

@@ -1,3 +1,7 @@
+# ife 0.2.5
+
+* Updates to how standard errors are calculated with clustering (see DOI: 10.1002/sim.9813 for more information). 
+
 # ife 0.2.4
 
 * Propagate `critical_value` through arithmetic operations. Binary operations between two estimates use the maximum critical value.
