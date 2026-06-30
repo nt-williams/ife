@@ -53,4 +53,7 @@ x + 1
 x / y
 x * y
 tidy(x)
+# Example: Confidence interval for a variance estimate
+x <- rnorm(100, 0, 2)
+ife(mean(x^2), x^2 - mean(x^2)) - ife(mean(x), x - mean(x))^2
 }

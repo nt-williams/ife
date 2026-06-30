@@ -1,3 +1,17 @@
+# ife 0.2.4
+
+* Propagate `critical_value` through arithmetic operations. Binary operations between two estimates use the maximum critical value.
+
+# ife 0.2.3
+
+* Adding `^` method for raising estimates to a power via the delta method.
+
+# ife 0.2.2
+
+* Speed improvements through `collapse::fmean` and `collapse::fvar`.
+* `std_error` is only calculated once.
+* All properties, excluding `conf_int`, are now immutable.
+
 # ife 0.2.1
 
 * Previous version incorrectly ignored cluster level ids in standard error calculations (see issue #2)

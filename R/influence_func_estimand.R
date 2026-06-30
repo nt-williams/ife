@@ -6,17 +6,32 @@ NULL
 influence_func_estimate <- new_class("influence_func_estimate",
   package = "ife",
   properties = list(
-    x = class_double,
-    eif = class_double,
-    weights = class_double,
-    id = class_character,
+    x = new_property(
+      class_double,
+      setter = make_immutable("x")
+    ),
+    eif = new_property(
+      class_double,
+      setter = make_immutable("eif")
+    ),
+    weights = new_property(
+      class_double,
+      setter = make_immutable("weights")
+    ),
+    id = new_property(
+      class_character,
+      setter = make_immutable("id")
+    ),
     critical_value = class_double,
     std_error = new_property(
-      getter = function(self) {
-        n <- length(self@eif)
-        clusters <- split(self@eif*self@weights, self@id)
-        j <- length(clusters)
-        sqrt(var(vapply(clusters, function(x) mean(x), 1)) / j)
+      class_double,
+      default = NA_real_,
+      setter = function(self, value) {
+        if (!is.null(self@std_error) && !is.na(self@std_error)) {
+          stop("@std_error is read-only", call. = FALSE)
+        }
+        self@std_error <- value
+        self
       }
     ),
     conf_int = new_property(
@@ -52,11 +67,27 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' x / y
   #' x * y
   #' tidy(x)
+  #' # Example: Confidence interval for a variance estimate
+  #' x <- rnorm(100, 0, 2)
+  #' ife(mean(x^2), x^2 - mean(x^2)) - ife(mean(x), x - mean(x))^2
   constructor = function(x, eif,
                          weights = rep(1, length(eif)),
                          id = as.character(1:length(eif)),
                          critical_value = qnorm(0.975)) {
-    new_object(S7_object(), x = x, eif = eif, weights = weights, id = id, critical_value = critical_value)
+    self <- new_object(
+      S7_object(),
+      x = x,
+      eif = eif,
+      weights = weights,
+      id = id,
+      critical_value = critical_value,
+      std_error = NA_real_
+    )
+
+    S7::validate(self)
+
+    self@std_error <- std_error(self)
+    self
   },
   validator = function(self) {
     if (length(self@x) != 1) {
@@ -95,13 +126,12 @@ influence_func_estimate <- new_class("influence_func_estimate",
 
 # print
 method(print, influence_func_estimate) <- function(x, ...) {
+  ci <- x@conf_int
   div <- cli_div(theme = list(.val = list(digits = 3)))
   cli({
     cat(format_inline("      Estimate: {.val {x@x}}\n"))
-    # cli_text(cat("      "), "Estimate: {.val {x@x}}")
     cat(format_inline("    Std. error: {.val {x@std_error}}\n"))
-    # cli_text(cat("    "), "Std. error: {.val {x@std_error}}")
-    cli_text("95% Conf. int.: {.val {x@conf_int[1]}}, {.val {x@conf_int[2]}}")
+    cli_text("95% Conf. int.: {.val {ci[1]}}, {.val {ci[2]}}")
   })
   cli_end(div)
 }
@@ -109,62 +139,81 @@ method(print, influence_func_estimate) <- function(x, ...) {
 # x + y
 method(`+`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimate(e1@x + e2@x, e1@eif + e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x + e2@x, e1@eif + e2@eif, e1@weights, e1@id, max(e1@critical_value, e2@critical_value))
 }
 
 method(`+`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
-  influence_func_estimate(e1@x + e2, e1@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x + e2, e1@eif, e1@weights, e1@id, e1@critical_value)
 }
 
+# Delegate to ife + scalar since addition is commutative
 method(`+`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) e2 + e1
 
 # x - y
 method(`-`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimate(e1@x - e2@x, e1@eif - e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x - e2@x, e1@eif - e2@eif, e1@weights, e1@id, max(e1@critical_value, e2@critical_value))
 }
 
 method(`-`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
-  influence_func_estimate(e1@x - e2, e1@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x - e2, e1@eif, e1@weights, e1@id, e1@critical_value)
 }
 
 method(`-`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
-  influence_func_estimate(e1 - e2@x, e2@eif, e2@weights, e2@id)
+  influence_func_estimate(e1 - e2@x, -e2@eif, e2@weights, e2@id, e2@critical_value)
 }
 
 # x / y
 method(`/`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
+  if (abs(e2@x) < .Machine$double.eps) {
+    stop("Division by zero: denominator estimate is zero", call. = FALSE)
+  }
   eif <- (e1@eif / e2@x) - ((e2@eif / e2@x^2) * e1@x)
-  influence_func_estimate(e1@x / e2@x, eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x / e2@x, eif, e1@weights, e1@id, max(e1@critical_value, e2@critical_value))
 }
 
 method(`/`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
-  influence_func_estimate(e1 / e2@x, -e1 / e2@x^2 * e2@eif, e2@weights, e2@id)
+  if (abs(e2@x) < .Machine$double.eps) {
+    stop("Division by zero: denominator estimate is zero", call. = FALSE)
+  }
+  influence_func_estimate(e1 / e2@x, -e1 / e2@x^2 * e2@eif, e2@weights, e2@id, e2@critical_value)
 }
 
 method(`/`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
-  influence_func_estimate(e1@x / e2, 1 / e2 * e1@eif, e1@weights, e1@id)
+  if (abs(e2) < .Machine$double.eps) {
+    stop("Division by zero: denominator is zero", call. = FALSE)
+  }
+  influence_func_estimate(e1@x / e2, 1 / e2 * e1@eif, e1@weights, e1@id, e1@critical_value)
 }
 
 # x * y
 method(`*`, list(influence_func_estimate, influence_func_estimate)) <- function(e1, e2) {
   check_same(e1, e2)
-  influence_func_estimate(e1@x * e2@x, e2@x * e1@eif + e1@x * e2@eif, e1@weights, e1@id)
+  influence_func_estimate(e1@x * e2@x, e2@x * e1@eif + e1@x * e2@eif, e1@weights, e1@id, max(e1@critical_value, e2@critical_value))
 }
 
 method(`*`, list(class_numeric, influence_func_estimate)) <- function(e1, e2) {
-  influence_func_estimate(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id)
+  influence_func_estimate(e1 * e2@x, e1 * e2@eif, e2@weights, e2@id, e2@critical_value)
 }
 
+# x^n
+method(`^`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) {
+  influence_func_estimate(e1@x^e2, e2 * e1@x^(e2 - 1) * e1@eif, e1@weights, e1@id, e1@critical_value)
+}
+
+# Delegate to scalar * ife since multiplication is commutative
 method(`*`, list(influence_func_estimate, class_numeric)) <- function(e1, e2) e2 * e1
 
 # log(x)
 method(log, influence_func_estimate) <- function(x, base) {
-  influence_func_estimate(log(x@x), x@eif / x@x, x@weights, x@id)
+  if (x@x <= 0) {
+    stop("log() requires positive values: estimate is ", x@x, call. = FALSE)
+  }
+  influence_func_estimate(log(x@x), x@eif / x@x, x@weights, x@id, x@critical_value)
 }
 
 # exp(x)
 method(exp, influence_func_estimate) <- function(x) {
-  influence_func_estimate(exp(x@x), exp(x@x) * x@eif, x@weights, x@id)
+  influence_func_estimate(exp(x@x), exp(x@x) * x@eif, x@weights, x@id, x@critical_value)
 }

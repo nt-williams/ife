@@ -39,6 +39,7 @@ Consider estimating the population mean outcome under treatment $E[E[Y \mid A=1,
 ```{r example}
 library(ife)
 
+set.seed(7654)
 # Generate simulated data
 n <- 500
 w <- runif(n)                                   # confounder
