@@ -24,13 +24,13 @@ influence_func_estimate(
 }
 \arguments{
 \item{x}{[\code{numeric(1)}]\cr
-The estimate.}
+The point estimate.}
 
 \item{eif}{[\code{numeric(n)}]\cr
 The influence function.}
 
 \item{weights}{[\code{numeric(n)}]\cr
-Optional sampling weights.}
+Optional known survey sampling weights.}
 
 \item{id}{[\code{character(n)}]\cr
 Optional cluster identifiers.}
@@ -45,8 +45,10 @@ An 'S7' object of class \code{influence_func_estimate}.
 Create a new `influence_func_estimate` object
 }
 \examples{
-x <- influence_func_estimate(5, runif(10))
-y <- ife(5, runif(10))
+.x <- rnorm(100)
+.y <- rnorm(100)
+x <- influence_func_estimate(mean(.x), .x - mean(.x))
+y <- influence_func_estimate(mean(.x), .y - mean(.y))
 x + y
 x + 1
 1 - y
@@ -54,6 +56,6 @@ x / y
 x * y
 tidy(x)
 # Example: Confidence interval for a variance estimate
-x <- rnorm(100, 0, 2)
-ife(mean(x^2), x^2 - mean(x^2)) - ife(mean(x), x - mean(x))^2
+.z <- rnorm(100, 0, sqrt(4))
+ife(mean(.z^2), .z^2 - mean(.z^2)) - ife(mean(.z), .z - mean(.z))^2
 }
