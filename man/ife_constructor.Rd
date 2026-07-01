@@ -24,10 +24,10 @@ influence_func_estimate(
 }
 \arguments{
 \item{x}{[\code{numeric(1)}]\cr
-The individual-level point estimate.}
+The point estimate.}
 
 \item{eif}{[\code{numeric(n)}]\cr
-The individual-level influence function.}
+The influence function.}
 
 \item{weights}{[\code{numeric(n)}]\cr
 Optional known survey sampling weights.}

@@ -46,9 +46,9 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' @name ife_constructor
   #'
   #' @param x [\code{numeric(1)}]\cr
-  #'  The individual-level point estimate.
+  #'  The point estimate.
   #' @param eif [\code{numeric(n)}]\cr
-  #'  The individual-level influence function.
+  #'  The influence function.
   #' @param weights [\code{numeric(n)}]\cr
   #'  Optional known survey sampling weights.
   #' @param id [\code{character(n)}]\cr
