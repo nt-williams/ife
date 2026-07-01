@@ -1,6 +1,7 @@
 #' @importFrom cli cli cli_div format_inline cli_text cli_end
 #' @importFrom S7 new_class new_generic new_property new_object S7_object class_double class_character `method<-` class_numeric
 #' @importFrom stats qnorm
+#' @importFrom collapse fvar fsum
 NULL
 
 influence_func_estimate <- new_class("influence_func_estimate",
@@ -45,22 +46,32 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' @name ife_constructor
   #'
   #' @param x [\code{numeric(1)}]\cr
-  #'  The estimate.
+  #'  The point estimate.
   #' @param eif [\code{numeric(n)}]\cr
   #'  The influence function.
   #' @param weights [\code{numeric(n)}]\cr
-  #'  Optional sampling weights.
+  #'  Optional known survey sampling weights.
   #' @param id [\code{character(n)}]\cr
   #'  Optional cluster identifiers.
   #' @param critical_value [\code{numeric(1)}]\cr
   #'  Optional critical value for constructing confidence interval.
   #'
   #' @return An 'S7' object of class \code{influence_func_estimate}.
+  #' 
+  #' @details
+  #' If known survey weights are provided, the variance estimator is the sample variance of the influence function
+  #' multiplied by the survey weights (see DOI: 10.1093/aje/kwu197 for more information). If there is clustering, 
+  #' \code{x} and \code{eif} are assumed to be on the individual-level. The individual-level influence function is 
+  #' then aggregated to the cluster-level and the variance estimator is the sample variance of the estimated 
+  #' cluster-level influence function, scaled by the number of clusters (see DOI: 10.1002/sim.9813 for more information).
+  #' 
   #' @export
   #'
   #' @examples
-  #' x <- influence_func_estimate(5, runif(10))
-  #' y <- ife(5, runif(10))
+  #' .x <- rnorm(100)
+  #' .y <- rnorm(100)
+  #' x <- influence_func_estimate(mean(.x), .x - mean(.x))
+  #' y <- influence_func_estimate(mean(.x), .y - mean(.y))
   #' x + y
   #' x + 1
   #' 1 - y
@@ -68,8 +79,8 @@ influence_func_estimate <- new_class("influence_func_estimate",
   #' x * y
   #' tidy(x)
   #' # Example: Confidence interval for a variance estimate
-  #' x <- rnorm(100, 0, 2)
-  #' ife(mean(x^2), x^2 - mean(x^2)) - ife(mean(x), x - mean(x))^2
+  #' .z <- rnorm(100, 0, sqrt(4))
+  #' ife(mean(.z^2), .z^2 - mean(.z^2)) - ife(mean(.z), .z - mean(.z))^2
   constructor = function(x, eif,
                          weights = rep(1, length(eif)),
                          id = as.character(1:length(eif)),
